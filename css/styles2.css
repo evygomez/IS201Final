@@ -1,0 +1,91 @@
+body {
+    background-color: lightyellow; 
+    font-family: Arial, sans-serif; 
+    color: #333; 
+}
+
+header {
+    background-color: #333;
+    color: white;
+    padding: 20px;
+    text-align: center;
+}
+
+.subheader {
+    justify-content: space-evenly;
+}
+
+h1 {
+    font-size: 2em;
+}
+
+h2 {
+    color: #444;
+}
+
+/* Navigation Styling */
+nav ul {
+    list-style-type: none;
+    padding: 0;
+    text-align: center;
+}
+
+nav ul li {
+    display: inline;
+    margin: 0 15px;
+}
+
+nav ul li a {
+    text-decoration: none;
+    color: #333;
+    font-weight: bold;
+}
+
+/* Div Styling */
+div {
+    margin: 20px;
+    padding: 20px;
+    background-color: lightblue;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Styling for the Image Section */
+.list-inline {
+padding-left: 10;
+list-style: none;
+}
+
+.list-inline-item {
+display: inline-block;
+width: 227px;
+height: 150px;
+}
+
+/* Embedded Video Styling */
+#video iframe {
+    display: block;
+    margin: 0 auto;
+}
+
+/* Styling for the Tableau Graph */
+#viz1734254293949 iframe {
+    display: block;
+    margin: 20px auto;
+    border: none;
+    width: 100%;
+}
+
+/* Styling for Footer and On Page Anchor */
+.common-footer {
+    position: fixed;
+    margin: 0 20px;
+    bottom: 0;
+    width: 92.4%; /* couldn't figure out how else to center it...nothing worked  */
+    text-align: center;
+    color: white;
+    background-color: #444;
+}
+
+.on-page-anchor {
+    color: white;
+}

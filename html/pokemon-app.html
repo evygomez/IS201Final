@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Digital Pokémon Pet</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-image: url(../assets/img/pokemon.png);
+            background-size: cover;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .pet {
+            width: 150px;
+            height: 150px;
+            background-color: #ffcc00;
+            border-radius: 50%;
+            margin: 20px auto;
+            background-size: cover;
+            background-position: center;
+        }
+
+        .status {
+            margin-top: 20px;
+            font-size: 18px;
+            color: white;
+        }
+
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            margin: 5px;
+            cursor: pointer;
+            border: none;
+            border-radius: 5px;
+        }
+
+        .feed-button {
+            background-color: #ffcc00;
+            color: white;
+        }
+
+        .play-button {
+            background-color: #66cc66;
+            color: white;
+        }
+
+        .pokemon-choice-container {
+            margin: 20px;
+        }
+
+        .pokemon-choice {
+            margin: 10px;
+            padding: 10px 20px;
+            font-size: 18px;
+            background-color: #ddd;
+            cursor: pointer;
+        }
+
+        .pokemon-choice:hover {
+            background-color: #aaa;
+        }
+
+        .timer {
+            font-size: 20px;
+            margin-top: 10px;
+            color: white;
+            display: none;
+        }
+
+        .berry {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            position: absolute;
+        }
+
+        .berry.purple {
+            background-color: purple;
+        }
+
+        .berry.red {
+            background-color: red;
+        }
+    </style>
+</head>
+<body>
+
+    <h1 style="color: lightblue;">Welcome to Your Digital Pokémon Pet!</h1>
+
+    <!-- Pokémon Selection -->
+    <div id="pokemon-choice" class="pokemon-choice-container">
+        <h2 style="color: lightblue;">Choose Your Pokémon!</h2>
+
+        <!-- Main Pokémon -->
+        <button class="pokemon-choice" onclick="choosePokemon('Squirtle')">Squirtle</button>
+        <button class="pokemon-choice" onclick="choosePokemon('Bulbasaur')">Bulbasaur</button>
+        <button class="pokemon-choice" onclick="choosePokemon('Charmander')">Charmander</button>
+
+        <hr style="margin: 20px 0;">
+
+        <!-- Additional Option -->
+        <h3 style="color: lightyellow;">Bonus Pokémon:</h3>
+        <button class="pokemon-choice" onclick="choosePokemon('Pikachu')">Pikachu</button>
+    </div>
+
+    <!-- Display chosen Pokémon -->
+    <div id="pet-container" style="display:none;">
+        <div id="pet" class="pet"></div>
+        <div id="status" class="status">Happiness: 50 | Hunger: 50</div>
+        <button class="feed-button" onclick="startFeedingGame()">Feed Pet</button>
+        <button class="play-button" onclick="startPlayGame()">Play with Pet</button>
+    </div>
+
+    <div id="timer" class="timer">Time Left: 15s</div>
+
+    <script>
+        let happiness = 50;
+        let hunger = 50;
+        let selectedPokemon = null;
+        let berryClicks = 0;
+        let redBerryClicks = 0;
+        let timerInterval;
+
+        const pokemonData = {
+            Squirtle: {
+                image: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/7.png',
+                happiness: 50,
+                hunger: 50
+            },
+            Bulbasaur: {
+                image: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/1.png',
+                happiness: 50,
+                hunger: 50
+            },
+            Charmander: {
+                image: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/4.png',
+                happiness: 50,
+                hunger: 50
+            },
+            Pikachu: {
+                image: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/25.png',
+                happiness: 50,
+                hunger: 50
+            }
+        };
+
+        // Choose a Pokémon
+        function choosePokemon(pokemon) {
+            selectedPokemon = pokemonData[pokemon];
+            happiness = selectedPokemon.happiness;
+            hunger = selectedPokemon.hunger;
+
+            document.getElementById('pokemon-choice').style.display = 'none';
+            document.getElementById('pet-container').style.display = 'block';
+
+            const petElement = document.getElementById('pet');
+            petElement.style.backgroundImage = `url(${selectedPokemon.image})`;
+
+            updatePetStatus();
+        }
+
+        // Update pet status
+        function updatePetStatus() {
+            const statusElement = document.getElementById('status');
+            statusElement.innerText = `Happiness: ${happiness} | Hunger: ${hunger}`;
+        }
+
+        // Start Feeding Game
+        function startFeedingGame() {
+            berryClicks = 0;
+            redBerryClicks = 0;
+            let timeLeft = 15;
+
+            const timer = document.getElementById("timer");
+            timer.style.display = "block";
+            timer.innerText = `Time Left: ${timeLeft}s`;
+
+            function createBerry() {
+                const berry = document.createElement("div");
+                berry.classList.add("berry");
+                berry.style.left = `${Math.random() * (window.innerWidth - 50)}px`;
+                berry.style.top = `${Math.random() * (window.innerHeight - 50)}px`;
+
+                // Assign berry type
+                if (Math.random() > 0.7) {
+                    berry.classList.add("red");
+                    berry.addEventListener("click", () => {
+                        redBerryClicks++; // Count clicked red berries
+                        berry.remove();
+                    });
+                } else {
+                    berry.classList.add("purple");
+                    berry.addEventListener("click", () => {
+                        berryClicks++; // Count clicked purple berries
+                        berry.remove();
+                    });
+                }
+
+                document.body.appendChild(berry);
+
+                // Remove berry after 3 seconds if not clicked
+                setTimeout(() => berry.remove(), 3000);
+            }
+
+            // Create berries at intervals
+            const berryInterval = setInterval(createBerry, 1000);
+
+            timerInterval = setInterval(() => {
+                timeLeft--;
+                timer.innerText = `Time Left: ${timeLeft}s`;
+
+                if (timeLeft <= 0) {
+                    clearInterval(timerInterval);
+                    clearInterval(berryInterval);
+                    timer.style.display = "none";
+
+                    alert(`You clicked ${berryClicks} purple berries and ${redBerryClicks} red berries!`);
+
+                    // Update hunger and happiness
+                    hunger = Math.max(0, hunger - berryClicks * 5);
+                    happiness = Math.min(100, happiness + berryClicks * 2); // Cap happiness at 100
+                    happiness = Math.max(0, happiness - redBerryClicks * 10);
+                    hunger = Math.max(0, hunger + redBerryClicks * 10);
+                    updatePetStatus();
+                }
+            }, 1000);
+        }
+
+        // Start Play Game
+        function startPlayGame() {
+            let timeLeft = 2;
+
+            const timer = document.getElementById("timer");
+            timer.style.display = "block";
+            timer.innerText = `Time Left: ${timeLeft}s`;
+
+            const pet = document.getElementById("pet");
+            pet.onclick = () => {
+                happiness = Math.min(100, happiness + 5);
+                updatePetStatus();
+            };
+
+            timerInterval = setInterval(() => {
+                timeLeft--;
+                timer.innerText = `Time Left: ${timeLeft}s`;
+
+                if (timeLeft <= 0) {
+                    clearInterval(timerInterval);
+                    pet.onclick = null;
+                    timer.style.display = "none";
+                    alert("Playtime is over!");
+                }
+            }, 1000);
+        }
+    </script>
+</body>
+</html>
+
